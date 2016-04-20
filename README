@@ -1,0 +1,180 @@
+wmnetload - A dockapp to monitor network interface usage.
+
+Copyright (c) 2002 Peter Memishian <meem@gnu.org>
+
+Overview
+========
+
+The wmnetload dockapp is a simple network interface monitoring tool.  It was
+written for use under Window Maker, but will likely work under other window
+managers such as AfterStep, BlackBox and Enlightenment.
+
+The dockapp has been designed with the following goals:
+
+	1. Look-and-feel like Seiichi SATO's kick-ass wmcpuload (see
+	   "Configuring the Look", below, for details).
+
+	2. Provide useful information.  When monitoring an interface,
+	   the information I frequently want to know is:
+
+		(a) Is the interface functioning?
+
+		(b) How loaded is the interface?
+
+		(c) What are the recent traffic patterns on the interface,
+		    for both incoming and outgoing traffic?
+
+	3. Provide information clearly.  To that end, wmnetload:
+
+		(a) Turns the entire digital display area red when an
+		    interface is malfunctioning, so that you're quickly
+		    alerted to the problem.
+
+		(b) Uses a large font for the total network throughput.
+		    It's important; it should be easy to read.  See
+		    "Understanding wmnetload Statistics", below, for
+		    help on interpreting throughput.
+
+		(c) Separates incoming and outgoing traffic in the network
+		    traffic graph in a intuitive, simple manner: incoming
+		    traffic is considered to be "pulled down" from the
+		    network and thus is shown descending from the top of the
+		    graph, whereas outgoing traffic is considered to be
+		    "pushed up" into the network and thus is shown growing
+		    up from the bottom of the graph.
+
+		    This approach may take some getting used to, but once
+		    you do, I hope you'll agree that it's much easier to
+		    read than the traditional multi-color approach, not to
+		    mention easier to remember.
+
+A number of other features you may find useful described below.
+
+If you have additional suggestions for how to improve wmnetload and still
+meet the aforementioned goals, don't hesitate to email.
+
+Building and Installation
+=========================
+
+This program uses standard GNU configure; please see the file `INSTALL' for
+generic instructions.  
+
+Unfortunately, wmnetload makes use of a couple of libraries that aren't
+installed by default on some versions of Unix.  In particular, you'll need
+both libXpm and libdockapp to compile wmnetload.  If you do not have these
+libraries one your system, you can grab them from:
+
+	libXpm		http://freshmeat.net/projects/libxpm
+	libdockapp	ftp://truffula.com/pub/libdockapp-0.4.tgz
+
+Please note that if you install these libraries in a location other than
+/usr/lib or /usr/local/lib, you'll need pass the --with-libs-from and
+--with-incs-from options to `configure'.  For instance, if you install these
+libraries in /usr/shared/i686/lib and the headers in /usr/shared/include,
+then you'll need to pass `--with-libs-from=/usr/shared/i686/lib
+--with-incs-from=/usr/shared/include' to `configure'.
+
+Configuring the Look
+====================
+
+Since one of the main goals of wmnetload is to match the look-and-feel of
+wmcpuload, and since the look of wmcpuload was changed as of version 0.9, the
+look of wmnetload has also been revised.  However, those who prefer the
+"classic" wmnetload look (or who are still using older versions of wmcpuload)
+can compile wmnetload to present the original look by passing
+--with-classic-look to `configure'. 
+
+Interface Cycling
+=================
+
+Although wmnetload can monitor only a single interface at a time, the
+interface being monitored can be selected by using mouse buton 3 to cycle
+through each of the available interfaces.  Note that with the classic look,
+wmnetload does not display the name of the interface, which makes interface
+cycling hard to use without getting confused.
+
+Alarm Mode
+==========
+
+Like wmcpuload, wmnetload allows you to set an alarm value (in kbits/sec)
+that causes the display backlight to be turned on whenever it is exceeded.
+This is chiefly useful for alerting you to unusual or aberrant network
+behavior.
+
+NetBSD Limitations
+==================
+
+Please note that wmnetload must execute as a kmem reader on NetBSD in order
+to retrieve interface statistics, which means that it must be run with a real
+or effective gid of `kmem'.  If you attempt to run wmnetload with a gid other
+than `kmem', it will fail with:
+
+  wmnetload: cannot access raw kernel memory: /dev/mem: Permission denied
+  wmnetload: fatal: cannot initialize interface statistics: Permission denied
+
+Note that wmnetload immediately drops `kmem' privileges at startup and only
+re-acquires them for the duration of the call to kvm_open(), so this should
+not pose a security risk.  However, since there's an inherent danger
+associated with setgid applications, wmnetload is never installed as setgid
+by default; you must do this yourself by executing:
+
+	# chgrp kmem wmnetload
+	# chmod 2755 wmnetload
+
+Solaris Limitations
+===================
+
+Solaris does not export the kstats wmnetload needs in order to track network
+activity on the loopback interface.  As a result, attempts to monitor
+the loopback interface will display "Err" on Solaris.
+
+AfterStep Limitations
+=====================
+
+Several users have reported issues trying to get wmnetload to be correctly
+swallowed when used under AfterStep.  Investigation has revealed that this
+problem is due to bugs in libdockapp, not wmnetload.  Unfortunately,
+libdockapp is currently unmaintained, so it's not really possible to roll
+fixes into it (without taking over as maintainer, a task which I simply do
+not have time for).  If you feel strongly about this issue, I encourage you
+to work on the core issue, which is getting libdockapp back in active
+development.
+
+Understanding wmnetload Statistics
+==================================
+
+First, this probably seems obvious, but wmnetload only provides statistics
+on packets *received* by the network card.  This means that if you're on a
+traditional non-switched Ethernet, and your network interface is not in
+promiscuous mode, wmnetload will be unaware of unicast traffic between other
+nodes on your network. 
+
+Second, depending on your operating system and whether it does accounting
+before or after firewalling rules, wmnetload statistics may or may not
+include traffic filtered by the firewall.
+
+By default, all throughput is displayed in either kilobits, megabits, or
+gigabits per second, as appropriate (the corresponding letter will light up
+to indicate the scale).  If you'd prefer your throughput displayed in bytes,
+then pass the `-b' option to wmnetload.
+
+Contributions
+=============
+
+Please send all bug reports, bug fixes, and enhancements to <meem@gnu.org>.
+I'm particularly interested in contributions that would lead to additional
+interface statistics "backends" for other POSIX-compliant systems.  Please
+let me know if you wish to contribute one or provide access to a machine I
+could use to write one myself.
+
+Copyright
+=========
+
+All code is under GPL.
+
+Fresh Bits
+==========
+
+The latest version of wmnetload is available from:
+
+	http://freshmeat.net/projects/wmnetload

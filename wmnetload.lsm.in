@@ -1,0 +1,21 @@
+Begin3
+Title:		wmnetload network interface monitor
+Version:	VERSION
+Entered-date:	DATE
+Description:	Network interface monitor dockapp for Window Maker.
+		Designed to fit in well with dockapps like wmcpuload
+		and wmmemmon.  Displays current network interface
+		throughput and an auto-scaling graph of recent network
+		activity.  The graph separates upstream and downstream
+		traffic load without resorting to colors (for
+		cleanliness).  wmnetload also indicates if the
+		interface disappears or goes down.
+Keywords:       dockapp dock-app WindowMaker X11 KDE OpenLook Motif
+Author:         Source by meem@gnu.org (Peter Memishian)
+		XPMs borrowed from Seiichi SATO (ssato@sh.rim.or.jp)
+Maintained-by:  meem@gnu.org (meem)
+Primary-site:   ftp://truffula.com:/pub
+                SIZE wmnetload-VERSION.tar.gz
+Platforms:      Solaris, Linux, NetBSD, FreeBSD, X11
+Copying-policy: GPL 2.0
+End

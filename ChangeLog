@@ -1,0 +1,30 @@
+2003-02-18  meem  <meem@gnu.org>
+
+	* Added --light-color support (with assistance from Torsten Marek)
+
+2003-02-17  meem  <meem@gnu.org>
+
+	* Added support for FreeBSD (with assistance from Hendrik Scholz
+	  and Stefan Knoblauch).
+	
+2002-12-12  meem  <meem@gnu.org>
+
+	* Fixed autoconf <X11/xpm.h> detection problems.
+	* Fixed build to allow GCC with Sun ld.
+
+2002-10-27  meem  <meem@gnu.org>
+	
+	* Added support for pluggable looks.
+	* Added new look that matches wmcpuload 0.9+.
+	* Added support for interface cycling.
+	* Added support for interface names.
+	* Added preliminary support for BPS smoothing.
+	* Rewhacked option names to be more logical.
+	* Added support for Sun C compiler.
+	* Added support for setting an alarm (like wmcpuload).
+	* Added support for choosing output in either bits or bytes.	
+	* Tightened up visual compatibility between wmnetload and wmcpuload
+	
+2002-01-09  meem  <meem@gnu.org>
+
+	* Created initial release (see README for details)

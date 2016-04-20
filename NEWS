@@ -1,0 +1,30 @@
+Version 1.3:
+
+	* Added support for FreeBSD.
+
+Version 1.2:
+
+	* Fixed some autoconf and build related issues.
+
+Version 1.1:
+
+	* Added support for setting an alarm (like wmcpuload).
+	* Fixed a number of interface cycling bugs.
+	* Added support for choosing output in either bits or bytes.
+	* Tightened up the visual compatibility between wmnetload and
+	  wmcpuload (thanks to Brad Heilbrun for bringing the issue to
+	  my attention).
+
+Version 1.1 Beta:
+
+	* Added support for pluggable looks.
+	* Added new look that matches wmcpuload 0.9+.
+	* Added support for interface cycling.
+	* Added support for interface names.
+	* Added preliminary support for BPS smoothing.
+	* Rewhacked option names to be more logical.
+	* Did lots of code refactoring.
+	* Reduced the number of redraws and the size of the redrawn region.
+	* Added support for Sun C compiler.
+	
+Initial release (see README for details)
