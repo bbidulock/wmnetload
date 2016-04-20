@@ -29,6 +29,8 @@
 #include "../common/pixmaps.h"
 #include "./parts.xpm"
 #include "./backlight_down.xpm"
+#include "./backlight_down_on.xpm"
+#include "./backlight_down_off.xpm"
 #include "./backlight_err.xpm"
 #include "./backlight_on.xpm"
 #include "./backlight_off.xpm"

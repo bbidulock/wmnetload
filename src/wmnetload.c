@@ -140,7 +140,7 @@ static unsigned int *timetable_init(double [], unsigned int, unsigned int);
 static unsigned long getblendedcolor(const char *, int);
 
 static Pixmap backlight_on, backlight_off, backlight_err, backlight_down;
-static Pixmap parts, font;
+static Pixmap backlight_down_on, backlight_down_off, parts, font;
 
 static char *desc = "\nNetwork interface usage monitor.\n";
 static char *vers = "wmnetload "VERSION" by meem@gnu.org -- compiled "__DATE__;
@@ -468,13 +468,20 @@ draw_dockapp(ifinfo_t *ifp, unsigned int flags, Pixmap pixbuf)
 			background = backlight_err;
 		} else {
 			dispflags |= WN_DISP_WARN;
-			background = backlight_down;
+			background = backlight_down_off;
+			if (dispflags & WN_DISP_BACKLIT)
+				background = backlight_down_on;
 		}
 		break;
 
 	case IF_DOWN:
 		dispflags |= WN_DISP_WARN;
 		background = backlight_down;
+		if (options[OPT_KEEP].used) {
+			background = backlight_down_off;
+			if (dispflags & WN_DISP_BACKLIT)
+				background = backlight_down_on;
+		}
 		break;
 
 	case IF_UP:
@@ -559,7 +566,7 @@ draw_ifname(const char *ifname, Pixmap pixbuf)
 	if (dispflags & WN_DISP_BACKLIT)
 		syoff = WN_FONT_YOFF + WN_FONT_HEIGHT;
 
-	if (dispflags & WN_DISP_WARN)
+	if ((!options[OPT_KEEP].used) && (dispflags & WN_DISP_WARN))
 		syoff = WN_FONT_YOFF + (2 * WN_FONT_HEIGHT);
 
 	/*
@@ -1028,6 +1035,8 @@ xpm2pixmap(void)
 		{ backlight_down_xpm,	&backlight_down	},
 		{ parts_xpm,		&parts		},
 		{ font_xpm,		&font 		},
+		{ backlight_down_on_xpm, &backlight_down_on},
+		{ backlight_down_off_xpm, &backlight_down_off},
 		{ NULL }
 	};
 	unsigned int h, w, i;
