@@ -146,7 +146,7 @@ static char *desc = "\nNetwork interface usage monitor.\n";
 static char *vers = "wmnetload "VERSION" by meem@gnu.org -- compiled "__DATE__;
 
 enum { OPT_DISPLAY, OPT_BACKLIGHT, OPT_LIGHTCOLOR, OPT_UPDATE, OPT_INTERFACE,
-       OPT_NOIFNAME, OPT_SMOOTHING, OPT_BYTES, OPT_ALARM, OPT_MAX };
+       OPT_NOIFNAME, OPT_SMOOTHING, OPT_BYTES, OPT_ALARM, OPT_KEEP, OPT_MAX };
 
 extern int d_windowed;		/* grr; should be in <dockapp.h> */
 
@@ -161,7 +161,9 @@ static DAProgramOption options[] = {
 	{ "-s", "--smooth", "sets smoothing value (experimental)", DOInteger },
 	{ "-b", "--bytes", "display bytes/sec instead of bits/sec", DONone },
 	{ "-a", "--alarm", "activates alarm mode. <number> is in kbits/sec\n"
-	  "\t\t\t\t(or kbytes/sec if -b is specified)", DOInteger }
+	  "\t\t\t\t(or kbytes/sec if -b is specified)", DOInteger },
+	{ "-k", "--keep-ifname", "keep interface name even if not found",
+	  DONone }
 };
 
 static DACallbacks callbacks = { NULL, buttonpress };
@@ -191,6 +193,7 @@ main(int argc, char **argv)
 	ifinfo_t	*ifp;
 	Pixmap		pixmap;
 
+	bzero(nextifname, IFNAMSIZ);
 	progname = strrchr(argv[0], '/');
 	if (progname != NULL)
 		progname++;
@@ -218,9 +221,11 @@ main(int argc, char **argv)
 	if (!options[OPT_INTERFACE].used) {
 		ifname = nextifname;
 	} else if (if_status(siocfd, ifname) == IF_UNKNOWN) {
-		warn("unknown interface %s; defaulting to %s\n", ifname,
-		    nextifname);
-		ifname = nextifname;
+		if (!options[OPT_KEEP].used) {
+			warn("unknown interface %s; defaulting to %s\n", ifname,
+			    nextifname);
+			ifname = nextifname;
+		}
 	}
 
 	if (!options[OPT_DISPLAY].used)
@@ -285,7 +290,8 @@ main(int argc, char **argv)
 	ifp = ifinfo_create(ifname);
 	for (;;) {
 		ifinfo_monitor(ifp, siocfd, niter, interval, pixmap);
-		if (if_next(siocfd, ifname, nextifname)) {
+		if ((!options[OPT_KEEP].used) &&
+		    (if_next(siocfd, ifname, nextifname))) {
 			ifinfo_destroy(ifp);
 			ifp = ifinfo_create(nextifname);
 			ifname = nextifname;
@@ -457,8 +463,13 @@ draw_dockapp(ifinfo_t *ifp, unsigned int flags, Pixmap pixbuf)
 	 */
 	switch (ifp->status) {
 	case IF_UNKNOWN:
-		dispflags |= WN_DISP_WARN;
-		background = backlight_err;
+		if (!options[OPT_KEEP].used) {
+			dispflags |= WN_DISP_WARN;
+			background = backlight_err;
+		} else {
+			dispflags |= WN_DISP_WARN;
+			background = backlight_down;
+		}
 		break;
 
 	case IF_DOWN:
