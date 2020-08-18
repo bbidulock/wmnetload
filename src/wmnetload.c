@@ -1071,7 +1071,7 @@ static void
 setshape(void)
 {
 	Pixmap mask, pixmap;
-	unsigned int h, w;
+	short unsigned int h, w;
 
 	if (DAMakePixmapFromData(backlight_off_xpm, &pixmap, &mask, &h, &w)) {
 		DASetShape(mask);
