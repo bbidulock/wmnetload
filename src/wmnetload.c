@@ -37,7 +37,12 @@
 #include <sys/ioctl.h>
 #include <sys/time.h>
 #include <unistd.h>
+#ifdef HAVE_DOCKAPP_H
 #include <dockapp.h>
+#endif
+#ifdef HAVE_LIBDOCKAPP_DOCKAPP_H
+#include <libdockapp/dockapp.h>
+#endif
 #ifdef HAVE_SYS_SOCKIO_H
 #include <sys/sockio.h>
 #endif
