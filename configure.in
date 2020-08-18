@@ -190,6 +190,8 @@ WN_CHECK_LIB(dockapp, DAInitialize, [$XLFLAGS $XLIBS -lXpm])
 if test "x$ac_cv_lib_dockapp_DAInitialize" = xyes; then
         WN_CHECK_HEADER(dockapp.h, $XCFLAGS)
         if test "x$ac_cv_header_dockapp_h" != xyes; then
+	WN_CHECK_HEADER(libdockapp/dockapp.h, $XCFLAGS)
+        elif test "x$ac_cv_header_libdockapp_dockapp_h" != xyes; then
 		echo "Cannot find required libdockapp headers."
 		exit 1
         fi
@@ -212,6 +214,7 @@ AC_SUBST(LIBS)
 dnl Checks for header files.
 AC_CHECK_HEADERS(sys/sockio.h)
 AC_CHECK_HEADERS(alloca.h)
+AC_CHECK_HEADERS([libdockapp/dockapp.h dockapp.h])
 
 dnl Checks for typedefs, structures, and compiler/system characteristics.
 WN_TYPE_ULONGLONG_T
